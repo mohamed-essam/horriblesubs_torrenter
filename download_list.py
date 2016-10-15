@@ -1,5 +1,8 @@
 import sys
 from selenium.webdriver import PhantomJS
+from selenium.webdriver.support.select import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import scrapy
 from os import mkdir
 import os
@@ -22,7 +25,7 @@ def isBatch(urlData):
 def getData(link):
     driver = PhantomJS()
     driver.get(link)
-    sleep(5)
+    WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CLASS_NAME, "release-links")))
     content = driver.page_source
     response = scrapy.http.HtmlResponse(url=link, body=content, encoding="UTF-8")
     title = response.selector.xpath('//title/text()').extract()[0].split(u'\xbb')[0]
